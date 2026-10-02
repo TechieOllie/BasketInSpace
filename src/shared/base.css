@@ -1,0 +1,166 @@
+/* BasketInSpace · base commune aux deux versions :
+   page, ciel étoilé, effets (verre, relief, 3D) et animations. */
+
+body { margin: 0; }
+
+.sb-page {
+  position: relative;
+  z-index: 0;                 /* le ciel (z-index -1) reste derrière le contenu */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--sb-bg);
+  color: var(--sb-text);
+  font-family: var(--sb-font-body);
+  font-size: 16px;
+  line-height: 1.6;
+}
+.sb-page > main { flex: 1 0 auto; }
+
+/* Liens : couleur héritée, orange au survol. Les boutons (.sb-cta, .btn) sont exclus
+   pour garder leurs propres couleurs. */
+.sb-page a:where(:not(.btn, .sb-cta)) { color: inherit; text-decoration: none; }
+.sb-page a:where(:not(.btn, .sb-cta)):hover { color: var(--sb-accent-text); }
+.sb-page :where(a, button):focus-visible { outline: 2px solid var(--sb-cool); outline-offset: 3px; }
+
+.sb-display { font-family: var(--sb-font-display); }
+.sb-accent-text { color: var(--sb-accent-text); }
+
+/* ---------- Ciel étoilé : deux couches qui dérivent et suivent le défilement ---------- */
+.sb-sky { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.sb-sky__far,
+.sb-sky__near { position: absolute; top: 0; bottom: 0; left: 0; right: -900px; }
+.sb-sky__far {
+  background-size: 620px 560px;
+  background-position: 0 calc(var(--sb-scroll, 0) * 0.5px);   /* loin : suit lentement */
+  animation: sb-drift-far 240s linear infinite;
+  background-image:
+    radial-gradient(circle at 6% 20%, var(--sb-star) 0 1.2px, transparent 1.7px),
+    radial-gradient(circle at 14% 72%, var(--sb-star) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 23% 38%, var(--sb-star) 0 1.4px, transparent 1.9px),
+    radial-gradient(circle at 34% 88%, var(--sb-star) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 41% 12%, var(--sb-star) 0 1.2px, transparent 1.7px),
+    radial-gradient(circle at 52% 58%, var(--sb-star) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 58% 28%, var(--sb-star) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 67% 82%, var(--sb-star) 0 1.1px, transparent 1.6px),
+    radial-gradient(circle at 74% 9%, var(--sb-star) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 83% 46%, var(--sb-star) 0 1.3px, transparent 1.8px),
+    radial-gradient(circle at 91% 76%, var(--sb-star) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 96% 24%, var(--sb-star) 0 1.4px, transparent 1.9px);
+}
+.sb-sky__near {
+  background-size: 880px 760px;
+  background-position: 0 calc(var(--sb-scroll, 0) * 0.2px);   /* près : suit presque la page */
+  animation: sb-drift-near 150s linear infinite, sb-twinkle 4s ease-in-out infinite alternate;
+  background-image:
+    radial-gradient(circle at 12% 30%, var(--sb-star) 0 1.8px, transparent 2.4px),
+    radial-gradient(circle at 38% 78%, var(--sb-star) 0 2px, transparent 2.6px),
+    radial-gradient(circle at 57% 18%, var(--sb-star) 0 1.7px, transparent 2.3px),
+    radial-gradient(circle at 73% 62%, var(--sb-star) 0 2.1px, transparent 2.7px),
+    radial-gradient(circle at 90% 40%, var(--sb-star) 0 1.8px, transparent 2.4px);
+}
+
+/* ---------- Effets ---------- */
+/* Verre dépoli : navbar et pied de page flottants */
+.sb-glass {
+  background: var(--sb-surface);
+  background: color-mix(in srgb, var(--sb-surface) 80%, transparent);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 20px 30px -22px var(--sb-shadow);
+}
+
+/* Bouton en relief, qui s'enfonce au clic */
+.sb-raised {
+  box-shadow: 0 5px 0 var(--sb-accent-deep), 0 14px 22px -10px var(--sb-shadow);
+  transform: translateY(-2px);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.sb-raised:hover {
+  filter: brightness(1.08);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 0 var(--sb-accent-deep), 0 18px 26px -10px var(--sb-shadow);
+}
+.sb-raised:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--sb-accent-deep);
+}
+
+/* Carte qui se soulève et bascule au survol */
+.sb-lift {
+  border: 1px solid var(--sb-line);
+  box-shadow: 0 22px 34px -22px var(--sb-shadow);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.sb-lift:hover {
+  border-color: var(--sb-cool);
+  transform: perspective(900px) rotateX(7deg) translateY(-8px);
+  box-shadow: 0 36px 44px -24px var(--sb-shadow);
+}
+
+/* Titre extrudé */
+.sb-title-3d {
+  text-shadow: 0 2px 0 var(--sb-depth), 0 4px 0 var(--sb-depth), 0 6px 0 var(--sb-depth),
+    0 16px 22px var(--sb-shadow);
+}
+
+/* Bouton rond (mode clair/sombre, menu) */
+.sb-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--sb-line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--sb-text);
+  cursor: pointer;
+}
+.sb-icon-btn:hover { border-color: var(--sb-cool); }
+
+/* Liens du pied de page : pastille au survol */
+.sb-foot-links li { display: flex; align-items: center; min-height: 40px; }
+.sb-foot-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  margin-left: -12px;
+  padding: 0 12px;
+  border-radius: 999px;
+}
+.sb-foot-links a:hover { background: var(--sb-line); }
+
+/* ---------- Animations de l'illustration (HeroArt.jsx) ---------- */
+.sb-ship-orbit {
+  transform-box: view-box;
+  transform-origin: 240px 240px;   /* centre du ballon-planète */
+  animation: sb-orbit 36s linear infinite;
+}
+.sb-flame { animation: sb-flame 0.35s ease-in-out infinite alternate; }
+.sb-comet { animation: sb-comet 8s ease-in infinite; }
+.sb-tw { animation: sb-twinkle 3.2s ease-in-out infinite alternate; }
+.sb-tw--2 { animation-delay: -1.1s; }
+.sb-tw--3 { animation-delay: -2.3s; }
+.sb-tw--4 { animation-delay: -0.6s; }
+
+@keyframes sb-drift-far { to { transform: translateX(-620px); } }
+@keyframes sb-drift-near { to { transform: translateX(-880px); } }
+@keyframes sb-orbit { to { transform: rotate(360deg); } }
+@keyframes sb-flame { from { opacity: 0.45; } to { opacity: 1; } }
+@keyframes sb-twinkle { from { opacity: 0.35; } to { opacity: 1; } }
+@keyframes sb-comet {
+  0%, 62% { transform: translate(150px, -51px); opacity: 0; }
+  70% { opacity: 1; }
+  92% { opacity: 1; }
+  100% { transform: translate(-150px, 51px); opacity: 0; }
+}
+
+/* Tout s'arrête pour les visiteurs qui demandent moins de mouvement */
+@media (prefers-reduced-motion: reduce) {
+  .sb-raised, .sb-lift { transition: none; }
+  .sb-ship-orbit, .sb-flame, .sb-comet, .sb-tw { animation: none; }
+  .sb-sky__far, .sb-sky__near { animation: none; background-position: 0 0; }
+}
