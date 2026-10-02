@@ -1,0 +1,42 @@
+/* BasketInSpace · tokens de design (couleurs, polices).
+   Dans index.html :
+   <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+   Le thème est porté par l'attribut data-bs-theme sur <html> (voir useTheme.js). */
+
+:root {
+  --sb-font-display: "Unbounded", "Trebuchet MS", sans-serif;
+  --sb-font-body: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --sb-accent-ink: #0d1411;   /* texte posé sur l'accent */
+}
+
+/* Sombre : thème par défaut */
+:root,
+[data-bs-theme="dark"] {
+  --sb-bg: #0a0f0d;
+  --sb-surface: #111916;
+  --sb-line: rgba(227, 236, 231, 0.22);
+  --sb-text: #e3ece7;
+  --sb-muted: #9daca4;
+  --sb-accent: #ff7a2e;        /* fond des boutons, ballon */
+  --sb-accent-text: #ff9655;   /* accent utilisé comme couleur de texte */
+  --sb-accent-deep: #b8480f;   /* tranche des boutons en relief */
+  --sb-cool: #9daca4;          /* orbites, petites planètes */
+  --sb-star: rgba(227, 236, 231, 0.75);
+  --sb-shadow: rgba(0, 0, 0, 0.6);
+  --sb-depth: #47524c;         /* épaisseur du titre en relief */
+}
+
+[data-bs-theme="light"] {
+  --sb-bg: #eef1ef;
+  --sb-surface: #ffffff;
+  --sb-line: rgba(13, 20, 17, 0.22);
+  --sb-text: #0d1411;
+  --sb-muted: #47524c;
+  --sb-accent: #e4570b;
+  --sb-accent-text: #a83c00;
+  --sb-accent-deep: #a83c00;
+  --sb-cool: #47524c;
+  --sb-star: rgba(13, 20, 17, 0.4);
+  --sb-shadow: rgba(13, 20, 17, 0.28);
+  --sb-depth: #9daca4;
+}
