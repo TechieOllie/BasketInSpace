@@ -22,12 +22,12 @@ Une fois ces outils installés :
 
 ```sh
 # 1. Cloner le dépôt (en SSH, voir « S'authentifier sur GitHub » plus bas)
-git clone git@github.com:TechieOllie/Projet_PGL_B3.git
+git clone git@github.com:TechieOllie/BasketInSpace.git
 # ou avec gh :
-gh repo clone TechieOllie/Projet_PGL_B3
+gh repo clone TechieOllie/BasketInSpace
 
 # 2. Aller dans le dossier du projet
-cd Projet_PGL_B3
+cd BasketInSpace
 
 # 3. Installer les dépendances (versions exactes de package-lock.json)
 npm ci
