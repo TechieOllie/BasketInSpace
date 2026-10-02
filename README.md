@@ -1,16 +1,18 @@
 # BasketInSpace
 
-Projet React + TypeScript + Vite.
+Projet React + TypeScript + Vite, avec Bootstrap 5.3. Pour l'instant, seule la page d'accueil (design « Orbital ») est réalisée.
 
 - [Installation du projet](#installation-du-projet)
+- [Structure du code](#structure-du-code)
 - [Installer et configurer git et gh](#installer-et-configurer-git-et-gh)
+  - [Windows](#windows)
 - [Les bases de git](#les-bases-de-git)
 - [Méthode de travail : issues, branches et pull requests](#méthode-de-travail--issues-branches-et-pull-requests)
 - [Conventions de nommage](#conventions-de-nommage)
 
 ## Installation du projet
 
-Il vous faut :
+Sous Windows, suivez d'abord [l'installation des outils](#windows). Il vous faut :
 
 - **git**
 - **Node.js 22 LTS ou plus récent** (Vite demande au minimum 20.19 ou 22.12). Vérifiez avec `node -v`.
@@ -43,13 +45,46 @@ Autres scripts :
 | `npm run preview` | Sert le dossier `dist/` construit, en local                       |
 | `npm run lint`    | Lance ESLint                                                      |
 
+La page d'accueil s'affiche dans le navigateur. Les polices (Unbounded, Manrope) sont chargées depuis Google Fonts : il faut une connexion internet.
+
 > Utilisez `npm ci` après un clone ou un pull. N'utilisez `npm install <paquet>` que pour ajouter une dépendance, et commitez alors `package.json` **et** `package-lock.json` ensemble.
+
+## Structure du code
+
+```
+index.html              Polices Google Fonts, point d'entrée de Vite
+src/
+  main.tsx              Importe les CSS (dans cet ordre) et affiche HomePage
+  bootstrap/            La page d'accueil, avec les classes Bootstrap 5.3
+    HomePage.tsx        Assemble Navbar, Hero, Rules, Tiles, Footer
+    Navbar.tsx  Hero.tsx  Rules.tsx  Tiles.tsx  Footer.tsx
+    bridge.css          Relie les variables de Bootstrap aux tokens et ajoute ce que Bootstrap n'a pas
+  shared/
+    tokens.css          Couleurs et polices
+    base.css            Ciel étoilé, effets de verre, de relief et 3D, animations
+    useTheme.ts         Mode clair/sombre (US-05), mémorisé dans le localStorage
+    StarSky.tsx         Ciel étoilé qui suit le défilement
+    HeroArt.tsx         Illustration du hero (ballon-planète)
+    Icons.tsx           Icônes SVG
+    content.ts          Liens, règles, tuiles, pied de page (et leurs types)
+    types.ts            Types partagés (`User`)
+```
+
+L'ordre des imports dans `main.tsx` compte : Bootstrap, puis `tokens.css`, `base.css` et `bridge.css`.
+
+Le thème est porté par l'attribut `data-bs-theme` sur `<html>`, que Bootstrap lit nativement.
+
+Pour voir la navbar d'un utilisateur connecté (US-03), remplacez `user={null}` par `user={{ pseudo: "..." }}` dans `main.tsx`. Sans utilisateur, les boutons « Réserver » mènent à `/connexion` (US-04). Les liens sont de simples `<a href>` : il faudra les remplacer par ceux du routeur.
+
+À compléter : les textes entre crochets (description, règles, contacts, réseaux sociaux) dans `src/shared/content.ts` et dans `Hero.tsx` et `Rules.tsx`.
+
+Le rendu n'a pas encore été vérifié dans un navigateur : l'aspect, le responsive et les animations restent à contrôler.
 
 ## Installer et configurer git et gh
 
 ### Installation
 
-Choisissez les commandes de votre distribution :
+Choisissez les commandes de votre système :
 
 #### Arch / Manjaro / CachyOS
 
@@ -85,6 +120,43 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 # redémarrez le terminal, puis :
 nvm install --lts
 ```
+
+#### Windows
+
+Utilisez **PowerShell** (pas l'invite de commandes). `winget` est fourni avec Windows 10 et 11 :
+
+```powershell
+winget install --id Git.Git -e
+winget install --id GitHub.cli -e
+winget install --id OpenJS.NodeJS.LTS -e
+```
+
+**Fermez puis rouvrez PowerShell** pour que les nouvelles commandes soient reconnues, puis vérifiez :
+
+```powershell
+git --version
+gh --version
+node -v
+npm -v
+```
+
+Ensuite, les commandes de ce README s'utilisent telles quelles dans PowerShell ou dans Git Bash (installé avec git), à ces différences près :
+
+- Si `npm` répond « l'exécution de scripts est désactivée sur ce système », autorisez les scripts pour votre utilisateur, puis réessayez :
+
+  ```powershell
+  Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+  ```
+
+- Pour que git ne mélange pas les fins de ligne Windows (CRLF) et Linux (LF) :
+
+  ```powershell
+  git config --global core.autocrlf true
+  ```
+
+- Les commandes `sudo`, `apt`, `pacman`, `dnf` et `nvm` des autres sections ne s'appliquent pas à Windows.
+- Clonez le projet dans un dossier simple, sans espaces ni accents dans le chemin (par exemple `C:\Projets`), et évitez les dossiers synchronisés par OneDrive.
+- Si `npm run dev` est bloqué par le pare-feu Windows, autorisez l'accès aux réseaux privés.
 
 Vérifiez que tout est installé :
 
