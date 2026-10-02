@@ -1,0 +1,78 @@
+/* BasketInSpace · pont entre les tokens et Bootstrap 5.3.
+   À importer après bootstrap.min.css, shared/tokens.css et shared/base.css. */
+
+/* Les variables de Bootstrap pointent vers les tokens, dans les deux thèmes */
+:root,
+[data-bs-theme="light"],
+[data-bs-theme="dark"] {
+  --bs-body-bg: var(--sb-bg);
+  --bs-body-color: var(--sb-text);
+  --bs-secondary-color: var(--sb-muted);
+  --bs-tertiary-bg: var(--sb-surface);
+  --bs-border-color: var(--sb-line);
+  --bs-body-font-family: var(--sb-font-body);
+  --bs-emphasis-color: var(--sb-text);
+  --bs-heading-color: var(--sb-text);
+}
+
+.navbar {
+  --bs-navbar-color: var(--sb-text);
+  --bs-navbar-hover-color: var(--sb-accent-text);
+  --bs-navbar-active-color: var(--sb-text);
+  --bs-navbar-brand-color: var(--sb-text);
+  --bs-navbar-brand-hover-color: var(--sb-text);
+}
+
+.btn-primary {
+  --bs-btn-bg: var(--sb-accent);
+  --bs-btn-border-color: var(--sb-accent);
+  --bs-btn-color: var(--sb-accent-ink);
+  --bs-btn-hover-bg: var(--sb-accent);
+  --bs-btn-hover-border-color: var(--sb-accent);
+  --bs-btn-hover-color: var(--sb-accent-ink);
+  --bs-btn-active-bg: var(--sb-accent);
+  --bs-btn-active-border-color: var(--sb-accent);
+  --bs-btn-active-color: var(--sb-accent-ink);
+  --bs-btn-font-weight: 700;
+}
+
+.btn-outline-secondary {
+  --bs-btn-color: var(--sb-text);
+  --bs-btn-border-color: var(--sb-line);
+  --bs-btn-hover-bg: transparent;
+  --bs-btn-hover-color: var(--sb-accent-text);
+  --bs-btn-hover-border-color: var(--sb-cool);
+  --bs-btn-active-bg: transparent;
+  --bs-btn-active-color: var(--sb-accent-text);
+  --bs-btn-active-border-color: var(--sb-cool);
+  --bs-btn-font-weight: 700;
+}
+
+/* ---------- Ce que Bootstrap n'a pas en utilitaire ---------- */
+
+/* Barre flottante : capsule fermée, panneau arrondi quand le menu est ouvert */
+.sb-capsule { max-width: 1200px; min-height: 64px; border-radius: 32px; }
+.sb-brand { font-weight: 700; font-size: 15px; }
+
+/* Liens de navigation en pastilles (sur grand écran seulement) */
+@media (min-width: 1200px) {
+  .navbar-nav { gap: 2px; }
+  .navbar-nav .sb-pill { padding: 8px 12px; border-radius: 999px; }
+  .navbar-nav .sb-pill:hover,
+  .navbar-nav .sb-pill.active { background: var(--sb-line); }
+}
+
+/* Grand titre */
+.sb-title {
+  font-weight: 800;
+  font-size: clamp(40px, 6.4vw, 82px);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+}
+
+/* Tuiles */
+.sb-tile { min-height: 190px; border-radius: 24px; background: var(--sb-surface); }
+
+/* Pied de page flottant */
+.sb-footer-panel { max-width: 1200px; border-radius: 32px; }
+.sb-foot-links .me-n-pill { margin: 0 -12px 0 0; }
