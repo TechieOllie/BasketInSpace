@@ -8,8 +8,7 @@ export default function Rules() {
         <div className="col-lg-6">
           <h2 className="sb-display fs-2 mb-3">Le principe</h2>
           <p className="fs-5 text-body-secondary m-0">
-            [Présentation du principe du BasketInSpace : objectif du jeu, nombre de joueurs,
-            déroulement d'un match.]
+            Présentation du principe du BasketInSpace : deux équipes de cinq joueurs s’affrontent dans une arène spatiale en apesanteur. L’objectif est de marquer le plus de points possible dans le panier adverse, mais chaque passe et chaque rebond peuvent modifier la trajectoire du ballon. L’équipe qui compte le plus de points à la fin du match est déclarée vainqueur.
           </p>
         </div>
         <div className="col-lg-6">
