@@ -6,7 +6,7 @@ export default function Hero({ user = null }: { user?: User | null }) {
   return (
     <section className="border-bottom">
       <div className="container py-5">
-        <div className="row align-items-center g-5 py-lg-4">
+        <div className="row align-items-center g-4 g-lg-5 py-lg-4">
           <div className="col-lg-6 d-flex flex-column align-items-start gap-4">
             <h1 className="sb-display sb-title sb-title-3d m-0" aria-label="BasketInSpace">
               Basket<br />InSpace

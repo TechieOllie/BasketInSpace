@@ -1,0 +1,130 @@
+// Schéma de la base BasketInSpace (US-11).
+// Prix en spacebucks entiers. Le mot de passe est stocké sous forme d'empreinte (hash).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum TypeEvenement {
+  ENTRAINEMENT
+  MATCH
+}
+
+// --- Comptes et clubs ---
+
+model Club {
+  id          Int    @id @default(autoincrement())
+  nom         String
+  logoUrl     String
+  planete     String
+  district    String
+  description String
+
+  membres          User[]
+  evenementsHote   Evenement[] @relation("ClubHote")
+  evenementsInvite Evenement[] @relation("ClubInvite")
+}
+
+model User {
+  id             Int     @id @default(autoincrement())
+  nom            String
+  prenom         String
+  pseudo         String  @unique
+  email          String  @unique
+  telephone      String
+  anneeNaissance Int
+  planete        String
+  district       String
+  motDePasse     String
+  role           Role    @default(USER)
+  clubId         Int?
+  poste          String?
+
+  club         Club?         @relation(fields: [clubId], references: [id], onDelete: SetNull)
+  reservations Reservation[]
+  commandes    Commande[]
+}
+
+// --- Calendrier et réservations ---
+
+model Evenement {
+  id           Int           @id @default(autoincrement())
+  type         TypeEvenement
+  debut        DateTime
+  planete      String
+  district     String
+  capacite     Int
+  clubHoteId   Int
+  clubInviteId Int?
+  scoreHote    Int?
+  scoreInvite  Int?
+
+  clubHote     Club          @relation("ClubHote", fields: [clubHoteId], references: [id])
+  clubInvite   Club?         @relation("ClubInvite", fields: [clubInviteId], references: [id], onDelete: SetNull)
+  reservations Reservation[]
+}
+
+// Places restantes = capacite - nombre de réservations. Annuler supprime la ligne.
+model Reservation {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  evenementId Int
+  creeLe      DateTime @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  evenement Evenement @relation(fields: [evenementId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, evenementId])
+}
+
+// --- Boutique ---
+
+model Categorie {
+  id       Int       @id @default(autoincrement())
+  nom      String    @unique
+  articles Article[]
+}
+
+model Article {
+  id          Int    @id @default(autoincrement())
+  nom         String
+  photoUrl    String
+  description String
+  prix        Int
+  stock       Int
+  categorieId Int
+
+  categorie Categorie       @relation(fields: [categorieId], references: [id])
+  lignes    LigneCommande[]
+}
+
+model Commande {
+  id     Int      @id @default(autoincrement())
+  userId Int
+  creeLe DateTime @default(now())
+
+  user   User            @relation(fields: [userId], references: [id])
+  lignes LigneCommande[]
+}
+
+// prixUnitaire est recopié depuis Article pour figer le tarif au moment de l'achat.
+model LigneCommande {
+  id           Int @id @default(autoincrement())
+  commandeId   Int
+  articleId    Int
+  quantite     Int
+  prixUnitaire Int
+
+  commande Commande @relation(fields: [commandeId], references: [id], onDelete: Cascade)
+  article  Article  @relation(fields: [articleId], references: [id])
+}
