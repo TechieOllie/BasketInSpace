@@ -37,9 +37,9 @@ export const NAV_LINKS: NavLink[] = [
 ];
 
 export const RULES: Rule[] = [
-  { title: "[Règle 1]", text: "[Explication de la règle, en une ou deux phrases.]" },
-  { title: "[Règle 2]", text: "[Explication de la règle, en une ou deux phrases.]" },
-  { title: "[Règle 3]", text: "[Explication de la règle, en une ou deux phrases.]" },
+  { title: "Le rebond interplanétaire", text: "Un ballon qui rebondit sur le sol peut continuer sa trajectoire pendant plusieurs minutes. Pour éviter qu’il ne quitte l’arène, chaque terrain possède une limite orbitale : si le ballon la dépasse, il est considéré comme sorti, même s’il revient trois jours plus tard." },
+  { title: "Les pas sont remplacés par des poussées", text: "En apesanteur, les joueurs ne font pas vraiment de pas. Ils ont droit à trois poussées consécutives avec les mains, les pieds ou les parois de l’arène avant de devoir passer le ballon. Une quatrième poussée est considérée comme une accélération illégale." },
+  { title: "Interdiction de tourner sur soi-même", text: "Un joueur qui tourne sur lui-même plus de deux fois avant de tirer est déclaré en rotation incontrôlée. Il doit alors attendre qu’un coéquipier vienne l’arrêter avant de pouvoir reprendre le jeu." },
 ];
 
 export const TILES: Tile[] = [
@@ -73,9 +73,9 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
   {
     title: "Contact",
     items: [
-      { label: "[E-mail de contact]" },
-      { label: "[Téléphone]" },
-      { label: "[Adresse : planète, district]" },
+      { label: "contact@basketinspace.galaxy" },
+      { label: "+999 42 00 3000" },
+      { label: "Quai n°7, Station Orbitale des Rebonds Perdus, Secteur Saturne" },
     ],
   },
   {
