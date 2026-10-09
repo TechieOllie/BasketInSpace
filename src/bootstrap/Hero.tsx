@@ -12,8 +12,7 @@ export default function Hero({ user = null }: { user?: User | null }) {
               Basket<br />InSpace
             </h1>
             <p className="fs-5 text-body-secondary m-0">
-              Le basket se joue maintenant parmi les étoiles. [Votre description : en quoi
-              consiste le BasketInSpace, en deux ou trois phrases.]
+              Le basket se joue maintenant parmi les étoiles, le BasketInSpace est le seul sport où un simple rebond peut vous envoyer sur Mars. Affrontez vos adversaires en apesanteur, évitez les météorites et devenez le meilleur basketteur de la galaxie.
             </p>
             <div className="d-flex flex-wrap gap-3">
               <a
