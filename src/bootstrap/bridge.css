@@ -66,6 +66,11 @@
   .navbar-nav .sb-pill:hover,
   .navbar-nav .sb-pill.active { background: var(--sb-line); }
 }
+/* Entre 1200 et 1400 px le conteneur fait 1140 px : on resserre les pastilles
+   pour que le bouton de thème reste dans la capsule */
+@media (min-width: 1200px) and (max-width: 1399.98px) {
+  .navbar { --bs-navbar-nav-link-padding-x: 6px; }
+}
 
 /* Grand titre */
 .sb-title {
