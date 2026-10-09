@@ -3,8 +3,8 @@ import { FOOTER_COLUMNS } from "../shared/content";
 
 export default function Footer() {
   return (
-    <footer className="px-3 px-md-4 pb-4">
-      <div className="sb-glass sb-footer-panel border mx-auto px-4 px-md-5 pt-5 pb-3">
+    <footer className="container pb-4">
+      <div className="sb-glass sb-footer-panel border px-4 px-md-5 pt-5 pb-3">
         <div className="row g-4">
           <div className="col-sm-6 col-lg-3 d-flex flex-column gap-2">
             <span className="sb-display sb-brand">BasketInSpace</span>

@@ -51,8 +51,13 @@
 /* ---------- Ce que Bootstrap n'a pas en utilitaire ---------- */
 
 /* Barre flottante : capsule fermée, panneau arrondi quand le menu est ouvert */
-.sb-capsule { max-width: 1200px; min-height: 64px; border-radius: 32px; }
+/* Navbar et pied de page sont dans un .container : leurs bords s'alignent sur le contenu */
+.sb-capsule { min-height: 64px; border-radius: 32px; }
 .sb-brand { font-weight: 700; font-size: 15px; }
+/* Très petits écrans : le logo et les deux boutons tiennent sur une ligne */
+@media (max-width: 359.98px) {
+  .sb-brand { font-size: 13px; }
+}
 
 /* Liens de navigation en pastilles (sur grand écran seulement) */
 @media (min-width: 1200px) {
@@ -70,9 +75,12 @@
   letter-spacing: -0.02em;
 }
 
+/* Numéros des règles : largeur fixe pour aligner les titres */
+.sb-rule-num { min-width: 1.5em; }
+
 /* Tuiles */
 .sb-tile { min-height: 190px; border-radius: 24px; background: var(--sb-surface); }
 
 /* Pied de page flottant */
-.sb-footer-panel { max-width: 1200px; border-radius: 32px; }
+.sb-footer-panel { border-radius: 32px; }
 .sb-foot-links .me-n-pill { margin: 0 -12px 0 0; }
