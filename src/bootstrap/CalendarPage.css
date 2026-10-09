@@ -1,0 +1,209 @@
+/* BasketInSpace · page Calendrier.
+   Utilise uniquement les tokens de shared/tokens.css (--sb-*) : clair et sombre marchent seuls. */
+
+/* Couleur par type (US-15) : les matchs prennent l'orange de l'accent,
+   les entraînements la couleur froide des orbites. */
+.sb-ev--match { --sb-ev: var(--sb-accent); --sb-ev-text: var(--sb-accent-text); }
+.sb-ev--training { --sb-ev: var(--sb-cool); --sb-ev-text: var(--sb-text); }
+
+.sb-ev-dot {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--sb-ev);
+}
+
+.sb-cal-lead { max-width: 640px; }
+
+/* Panneau en verre, même forme que la navbar et le pied de page */
+.sb-cal-panel { border-radius: 32px; }
+
+.sb-cal-period {
+  min-width: 13ch;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Choix Mois / Semaine : mêmes pastilles que la navbar */
+.sb-segmented {
+  display: inline-flex;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 999px;
+}
+.sb-segmented .sb-pill {
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--sb-text);
+}
+.sb-segmented .sb-pill:hover { color: var(--sb-accent-text); }
+.sb-segmented .sb-pill.active { background: var(--sb-line); font-weight: 700; color: var(--sb-text); }
+
+/* Filtres par type */
+.sb-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--sb-line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--sb-muted);
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.sb-filter .sb-ev-dot { opacity: 0.35; }
+.sb-filter:hover { border-color: var(--sb-cool); }
+.sb-filter.active { color: var(--sb-text); font-weight: 700; background: var(--sb-line); }
+.sb-filter.active .sb-ev-dot { opacity: 1; }
+
+.sb-cal-select {
+  width: auto;
+  min-width: 240px;
+  min-height: 40px;
+  background-color: transparent;
+  color: var(--sb-text);
+  border-color: var(--sb-line);
+}
+.sb-cal-select:focus { border-color: var(--sb-cool); box-shadow: none; }
+.sb-cal-select option { background: var(--sb-surface); color: var(--sb-text); }
+
+/* ---------- Grilles mois et semaine ---------- */
+.sb-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+}
+.sb-cal-weekday {
+  padding: 4px 8px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--sb-muted);
+}
+.sb-cal-day {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 118px;
+  padding: 8px;
+  border: 1px solid var(--sb-line);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--sb-surface) 60%, transparent);
+}
+.sb-cal-day.is-outside { opacity: 0.35; }
+.sb-cal-day.is-today { border-color: var(--sb-accent); }
+
+.sb-cal-num {
+  align-self: flex-end;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.sb-cal-day.is-today .sb-cal-num { background: var(--sb-accent); color: var(--sb-accent-ink); }
+
+.sb-cal-grid--week .sb-cal-day { min-height: 340px; gap: 8px; }
+.sb-cal-week-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--sb-line);
+}
+.sb-cal-empty { margin-top: 8px; font-size: 13px; color: var(--sb-muted); text-align: center; }
+
+/* ---------- Pastilles d'événement ---------- */
+.sb-chip {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+  padding: 3px 8px;
+  border: 0;
+  border-left: 3px solid var(--sb-ev);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--sb-ev) 16%, transparent);
+  color: var(--sb-text);
+  font-size: 12px;
+  text-align: left;
+  transition: background 0.15s, transform 0.15s;
+}
+.sb-chip:hover { background: color-mix(in srgb, var(--sb-ev) 30%, transparent); transform: translateY(-1px); }
+.sb-chip-time { flex-shrink: 0; font-weight: 700; color: var(--sb-ev-text); }
+.sb-chip-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.sb-chip--detailed { flex-direction: column; gap: 2px; padding: 8px 10px; font-size: 13px; }
+.sb-chip--detailed .sb-chip-title { white-space: normal; font-weight: 700; }
+.sb-chip-place { font-size: 12px; color: var(--sb-muted); }
+
+.sb-cal-more {
+  align-self: flex-start;
+  padding: 0 8px;
+  border: 0;
+  background: none;
+  font-size: 12px;
+  color: var(--sb-muted);
+}
+.sb-cal-more:hover { color: var(--sb-accent-text); }
+
+/* ---------- Liste (mobile) ---------- */
+.sb-cal-list-date { font-size: 14px; font-weight: 700; color: var(--sb-muted); }
+.sb-cal-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--sb-line);
+  border-left: 4px solid var(--sb-ev);
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--sb-surface) 60%, transparent);
+  color: var(--sb-text);
+}
+.sb-cal-item:hover { border-color: var(--sb-cool); border-left-color: var(--sb-ev); }
+.sb-cal-item-time { display: flex; flex-direction: column; min-width: 52px; font-weight: 700; color: var(--sb-ev-text); }
+.sb-cal-item-time small { font-weight: 400; color: var(--sb-muted); }
+
+/* ---------- Modale ---------- */
+.sb-modal .modal-content {
+  border-radius: 32px;
+  color: var(--sb-text);
+  font-family: var(--sb-font-body);
+}
+.modal-backdrop.show { opacity: 0.7; }
+
+.sb-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--sb-ev) 18%, transparent);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--sb-ev-text);
+}
+
+.sb-modal-info {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px 24px;
+}
+.sb-modal-info dt { font-weight: 400; color: var(--sb-muted); }
+.sb-modal-info dd { margin: 0; font-weight: 700; }
+
+.sb-modal :where(a, button):focus-visible,
+.sb-cal-panel :where(button, select):focus-visible { outline: 2px solid var(--sb-cool); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sb-chip { transition: none; }
+  .sb-chip:hover { transform: none; }
+}

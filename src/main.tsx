@@ -5,9 +5,20 @@ import './shared/tokens.css'
 import './shared/base.css'
 import './bootstrap/bridge.css'
 import HomePage from './bootstrap/HomePage'
+import CalendarPage from './bootstrap/CalendarPage'
+
+// Les liens de la Navbar sont de simples <a href> : chaque navigation
+// recharge la page, on choisit donc la page selon le chemin courant.
+const path = window.location.pathname.replace(/\/+$/, '') || '/'
+const user = null
+const onLogout = () => {}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <HomePage user={null} onLogout={() => {}} />
+    {path === '/calendrier' ? (
+      <CalendarPage user={user} onLogout={onLogout} />
+    ) : (
+      <HomePage user={user} onLogout={onLogout} />
+    )}
   </StrictMode>,
 )
