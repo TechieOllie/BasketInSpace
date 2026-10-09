@@ -87,6 +87,7 @@ En tant que **visiteur**, je veux créer un compte, afin de pouvoir réserver de
 **Critères d'acceptation :**
 
 - Le formulaire demande : nom, prénom, pseudo, e-mail, numéro de téléphone, année de naissance, et Système/Planète + District.
+- Le Système/Planète + District est choisi parmi les lieux existants ; s'il n'existe pas encore, il est créé à l'inscription.
 - Tous les champs sont validés (format de l'e-mail et du téléphone, pseudo unique, année de naissance cohérente).
 - Un message d'erreur clair s'affiche si un champ est invalide.
 
@@ -157,15 +158,20 @@ En tant que **visiteur**, je veux voir les entraînements et matchs à venir sur
 
 - Le calendrier propose une vue par mois et par semaine.
 - Les entraînements et les matchs sont différenciés visuellement.
-- Cliquer sur un événement affiche ses détails : date, heure, lieu (planète/district), clubs concernés.
+- Cliquer sur un événement affiche ses détails : date, heure, lieu (planète/district), équipes concernées et leurs clubs.
 
 ### US-16 – Filtrer le calendrier
 
-En tant qu'**utilisateur**, je veux filtrer le calendrier par club ou par type d'événement, afin de ne voir que ce qui m'intéresse.
+En tant qu'**utilisateur**, je veux filtrer le calendrier par club, par équipe ou par type d'événement, afin de ne voir que ce qui m'intéresse.
 
 ### US-17 – Gérer les événements (admin)
 
 En tant qu'**administrateur**, je veux créer, modifier et supprimer des entraînements et des matchs, afin de garder le calendrier à jour.
+
+**Critères d'acceptation :**
+
+- Un match oppose deux équipes ; un entraînement concerne une seule équipe.
+- Le lieu est choisi parmi les lieux existants ; je peux en ajouter un nouveau s'il n'existe pas encore.
 
 ---
 
@@ -191,7 +197,7 @@ En tant que **visiteur**, je veux voir les scores des matchs passés, afin de su
 
 **Critères d'acceptation :**
 
-- Pour chaque match : les deux clubs, le score final, la date et le lieu.
+- Pour chaque match : les deux équipes et leurs clubs, le score final, la date et le lieu.
 - Les matchs sont triés du plus récent au plus ancien.
 
 ### US-21 – Saisir les scores (admin) (#15)
@@ -209,13 +215,55 @@ En tant que **visiteur**, je veux consulter la liste des clubs, afin de découvr
 
 ### US-23 – Voir les membres d'un club (#16)
 
-En tant que **visiteur**, je veux voir les membres d'un club, afin de connaître ses joueurs.
+En tant que **visiteur**, je veux voir les membres d'un club, afin de connaître ses joueurs et son encadrement (coachs, arbitres, etc.).
 
 **Critères d'acceptation :**
 
-- Seul le pseudo (et éventuellement le rôle ou le poste) est affiché publiquement.
+- La liste comprend les joueurs des équipes et les membres sans équipe (coachs, arbitres, etc.).
+- Pour chaque membre, seuls le pseudo, le poste et l'équipe éventuelle sont affichés publiquement.
 - L'e-mail et le téléphone ne sont jamais visibles.
 
 ### US-24 – Voir les matchs d'un club (#16)
 
-En tant que **visiteur**, je veux voir les prochains matchs et les derniers résultats d'un club sur sa page, afin de suivre cette équipe.
+En tant que **visiteur**, je veux voir les prochains matchs et les derniers résultats des équipes d'un club sur sa page, afin de suivre ce club.
+
+---
+
+## Équipes et postes
+
+### US-25 – Voir les équipes d'un club
+
+En tant que **visiteur**, je veux voir les équipes d'un club sur sa page, afin de savoir comment ses joueurs sont répartis.
+
+**Critères d'acceptation :**
+
+- Chaque équipe affiche son nom et ses joueurs.
+- Pour chaque joueur, seuls le pseudo et le poste sont affichés.
+
+### US-26 – Rejoindre un club et une équipe
+
+En tant qu'**utilisateur connecté**, je veux rejoindre ou quitter un club, et si je le souhaite une de ses équipes, afin d'y jouer ou d'y tenir un autre rôle (coach, arbitre, etc.).
+
+**Critères d'acceptation :**
+
+- Je peux être membre d'un club sans faire partie d'une équipe.
+- Je ne peux rejoindre qu'une équipe de mon club.
+- Je n'appartiens qu'à un seul club et à une seule équipe à la fois.
+
+### US-27 – Gérer les équipes (admin)
+
+En tant qu'**administrateur**, je veux créer, modifier et supprimer les équipes d'un club, afin que la liste des équipes reste à jour.
+
+**Critères d'acceptation :**
+
+- Chaque équipe appartient à un seul club.
+- Supprimer une équipe ne retire pas ses joueurs du club.
+
+### US-28 – Choisir mon poste
+
+En tant qu'**utilisateur**, je veux choisir mon poste dans une liste (poste de jeu, coach, arbitre, etc.), afin qu'il soit affiché à côté de mon pseudo.
+
+**Critères d'acceptation :**
+
+- La liste des postes est définie par les administrateurs.
+- Je peux changer de poste, ou ne pas en indiquer.
