@@ -90,9 +90,9 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
   {
     title: "Réseaux sociaux",
     items: [
-      { label: "[Réseau social 1]", href: "#" },
-      { label: "[Réseau social 2]", href: "#" },
-      { label: "[Réseau social 3]", href: "#" },
+      { label: "Orbitagram", href: "#" },
+      { label: "SpaceTok", href: "#" },
+      { label: "Xénosphère", href: "#" },
     ],
   },
 ];
