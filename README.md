@@ -3,6 +3,7 @@
 Projet React + TypeScript + Vite, avec Bootstrap 5.3. Pour l'instant, seule la page d'accueil (design « Orbital ») est réalisée.
 
 - [Installation du projet](#installation-du-projet)
+- [Base de données](#base-de-données)
 - [Structure du code](#structure-du-code)
 - [Installer et configurer git et gh](#installer-et-configurer-git-et-gh)
   - [Windows](#windows)
@@ -32,28 +33,72 @@ cd BasketInSpace
 # 3. Installer les dépendances (versions exactes de package-lock.json)
 npm ci
 
-# 4. Lancer le serveur de dev, puis ouvrir l'URL affichée (en général http://localhost:5173)
+# 4. Créer la base de données locale (voir « Base de données » plus bas)
+cp .env.example .env
+npm run db:migrate
+
+# 5. Lancer le serveur de dev, puis ouvrir l'URL affichée (en général http://localhost:5173)
 npm run dev
 ```
 
 Autres scripts :
 
-| Commande          | Ce qu'elle fait                                                   |
-| ----------------- | ----------------------------------------------------------------- |
-| `npm run dev`     | Serveur de dev avec rechargement automatique                      |
-| `npm run build`   | Vérifie les types et construit le site de production dans `dist/` |
-| `npm run preview` | Sert le dossier `dist/` construit, en local                       |
-| `npm run lint`    | Lance ESLint                                                      |
+| Commande             | Ce qu'elle fait                                                                 |
+| -------------------- | ------------------------------------------------------------------------------- |
+| `npm run dev`        | Serveur de dev avec rechargement automatique                                    |
+| `npm run build`      | Vérifie les types et construit le site de production dans `dist/`               |
+| `npm run preview`    | Sert le dossier `dist/` construit, en local                                     |
+| `npm run lint`       | Lance ESLint                                                                    |
+| `npm run db:migrate` | Applique les migrations à la base locale (et en crée une si le schéma a changé) |
+| `npm run db:reset`   | Vide la base locale et rejoue toutes les migrations                             |
+| `npm run db:studio`  | Ouvre Prisma Studio pour voir et modifier les données                           |
 
 La page d'accueil s'affiche dans le navigateur. Les polices (Unbounded, Manrope) sont chargées depuis Google Fonts : il faut une connexion internet.
 
 > Utilisez `npm ci` après un clone ou un pull. N'utilisez `npm install <paquet>` que pour ajouter une dépendance, et commitez alors `package.json` **et** `package-lock.json` ensemble.
 
+## Base de données
+
+La base est gérée avec [Prisma 7](https://www.prisma.io/docs) et SQLite : pas de serveur à installer, la base est un simple fichier `prisma/dev.db`. Le schéma est dans `prisma/schema.prisma` (8 tables : `User`, `Club`, `Evenement`, `Reservation`, `Categorie`, `Article`, `Commande`, `LigneCommande`).
+
+Initialiser la base après un clone :
+
+```sh
+cp .env.example .env      # sous Windows (PowerShell) : Copy-Item .env.example .env
+npm run db:migrate
+```
+
+`.env` et `dev.db` restent sur votre machine (ils sont dans `.gitignore`). Le client Prisma est généré dans `src/generated/prisma/` à chaque `npm ci` ; il n'est pas commité non plus.
+
+Modifier le schéma :
+
+1. Éditez `prisma/schema.prisma`.
+2. Lancez `npx prisma migrate dev --name <ce-qui-change>` (par exemple `--name ajout-stock-min`). Prisma crée un dossier dans `prisma/migrations/` et met la base à jour.
+3. Commitez le schéma **et** le nouveau dossier de migration ensemble. Ne modifiez jamais une migration déjà poussée.
+
+Après un pull qui apporte de nouvelles migrations, relancez `npm run db:migrate`.
+
+Le client Prisma ne tourne que côté serveur (Node), jamais dans le navigateur :
+
+```ts
+import "dotenv/config";
+import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaClient } from "./generated/prisma/client";
+
+const adapter = new PrismaBetterSqlite3({ url: process.env.DATABASE_URL! });
+export const prisma = new PrismaClient({ adapter });
+```
+
 ## Structure du code
 
 ```
 index.html              Polices Google Fonts, point d'entrée de Vite
+prisma.config.ts        Configuration de Prisma (schéma, migrations, URL de la base)
+prisma/
+  schema.prisma         Modèles de la base de données
+  migrations/           Migrations SQL versionnées
 src/
+  generated/prisma/     Client Prisma généré (non commité)
   main.tsx              Importe les CSS (dans cet ordre) et affiche HomePage
   bootstrap/            La page d'accueil, avec les classes Bootstrap 5.3
     HomePage.tsx        Assemble Navbar, Hero, Rules, Tiles, Footer
