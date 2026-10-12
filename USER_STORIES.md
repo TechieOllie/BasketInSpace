@@ -111,7 +111,7 @@ En tant qu'**administrateur**, je veux disposer de droits supplémentaires par r
 
 ---
 
-## Base de données et boutique d'équipement (#11)
+## Base de données et boutique d'équipement (#11, #17)
 
 ### US-11 – Stockage persistant des données
 
@@ -229,7 +229,7 @@ En tant que **visiteur**, je veux voir les prochains matchs et les derniers rés
 
 ---
 
-## Équipes et postes
+## Équipes et postes (#33)
 
 ### US-25 – Voir les équipes d'un club
 
