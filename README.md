@@ -1,6 +1,10 @@
 # BasketInSpace
 
-Projet React + TypeScript + Vite, avec Bootstrap 5.3. Pour l'instant, seule la page d'accueil (design « Orbital ») est réalisée.
+Site de la fédération du BasketInSpace, un basket fictif joué en apesanteur, sur le modèle de la FFBB : clubs et équipes, calendrier des entraînements et des matchs, réservations, scores et boutique. Projet PGL 2026-2027, équipe 4 (Tanguy DECORDE, Edgar FLAUD, Cyrian GOMME, Oliver WEST).
+
+Projet React + TypeScript + Vite, avec Bootstrap 5.3. Au sprint 1, deux pages sont réalisées : l'**accueil** (`/`) et le **calendrier** (`/calendrier`, avec des données fictives d'octobre et novembre 2026). Les autres liens du menu mènent pour l'instant à la page d'accueil.
+
+Les documents de chaque sprint (Product Backlog, Sprint Backlog, cahier de tests, compte rendu de rétrospective) sont dans [`docs/`](docs/).
 
 - [Installation du projet](#installation-du-projet)
 - [Base de données](#base-de-données)
@@ -53,7 +57,7 @@ Autres scripts :
 | `npm run db:reset`   | Vide la base locale et rejoue toutes les migrations                             |
 | `npm run db:studio`  | Ouvre Prisma Studio pour voir et modifier les données                           |
 
-La page d'accueil s'affiche dans le navigateur. Les polices (Unbounded, Manrope) sont chargées depuis Google Fonts : il faut une connexion internet.
+La page d'accueil s'affiche dans le navigateur ; le calendrier est sur `/calendrier`. Les polices (Unbounded, Manrope) sont chargées depuis Google Fonts : il faut une connexion internet.
 
 > Utilisez `npm ci` après un clone ou un pull. N'utilisez `npm install <paquet>` que pour ajouter une dépendance, et commitez alors `package.json` **et** `package-lock.json` ensemble.
 
