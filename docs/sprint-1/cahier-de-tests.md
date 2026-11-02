@@ -10,8 +10,8 @@ subtitle: "PGL 2026-2027 · Équipe 4"
 | **Version testée** | branche `main` du dépôt GitHub `TechieOllie/BasketInSpace` (commit `dab79c8`) |
 | **Installation** | voir le README, section « Installation du projet » ; clone neuf, Node.js 24, npm 11 |
 | **URL** | http://localhost:5173 (serveur lancé avec `npm run dev`) |
-| **Navigateurs** | Chromium (moteur de Chrome) et Firefox |
-| **Méthode** | T-01 à T-05 lancés à la main dans le terminal. T-06 à T-38 automatisés avec Playwright, exécutés dans les deux navigateurs, puis vérifiés visuellement sur des captures d'écran |
+| **Navigateurs** | Firefox et Chromium (moteur de Chrome) |
+| **Méthode** | T-01 à T-05 dans le terminal ; T-06 à T-38 dans les deux navigateurs |
 | **Tailles d'écran** | ordinateur (1440 px), tablette (800 et 1100 px), mobile (375 px), grand écran (1920 px) |
 | **Exécuté par / le** | Oliver WEST / 02/11/2026 |
 
