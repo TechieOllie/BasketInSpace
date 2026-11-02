@@ -5,7 +5,9 @@ subtitle: "PGL 2026-2027 · Équipe 4 · état au 03/11/2026"
 
 **Équipe 4 :** Tanguy DECORDE, Edgar FLAUD, Cyrian GOMME, Oliver WEST (Scrum Master)
 
-**Sujet :** application web permettant à un club sportif de gérer ses équipes, de planifier ses matchs et entraînements et de faciliter son fonctionnement. Notre club pratique le *BasketInSpace*, un basket fictif joué en apesanteur.
+**Sujet :** application web permettant à un club sportif de gérer ses équipes, de planifier les matchs et tournois auxquels il participe, et toute autre option aidant le club à fonctionner.
+
+**Notre interprétation :** le site est celui de la fédération du *BasketInSpace*, un basket fictif joué en apesanteur, sur le modèle de la Fédération française de basketball (FFBB). Il réunit tous les clubs, leurs équipes et leurs membres, et publie le calendrier des entraînements et des matchs, les scores et une boutique d'équipement.
 
 **Rôles utilisateurs :**
 

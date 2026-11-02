@@ -1,6 +1,6 @@
 # BasketInSpace
 
-Site d'un club de BasketInSpace, un basket fictif joué en apesanteur : gestion des équipes, calendrier des entraînements et des matchs, réservations, scores et boutique. Projet PGL 2026-2027, équipe 4 (Tanguy DECORDE, Edgar FLAUD, Cyrian GOMME, Oliver WEST).
+Site de la fédération du BasketInSpace, un basket fictif joué en apesanteur, sur le modèle de la FFBB : clubs et équipes, calendrier des entraînements et des matchs, réservations, scores et boutique. Projet PGL 2026-2027, équipe 4 (Tanguy DECORDE, Edgar FLAUD, Cyrian GOMME, Oliver WEST).
 
 Projet React + TypeScript + Vite, avec Bootstrap 5.3. Au sprint 1, deux pages sont réalisées : l'**accueil** (`/`) et le **calendrier** (`/calendrier`, avec des données fictives d'octobre et novembre 2026). Les autres liens du menu mènent pour l'instant à la page d'accueil.
 
