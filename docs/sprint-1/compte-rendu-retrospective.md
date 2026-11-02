@@ -6,7 +6,7 @@ subtitle: "PGL 2026-2027 · Équipe 4"
 | | |
 | --- | --- |
 | **Sprint** | 1 (29/09/2026 → 10/11/2026) |
-| **Date de la rétrospective** | ……/……/2026 |
+| **Date de la rétrospective** | 02/11/2026 |
 | **Animée par** | Oliver WEST (Scrum Master) |
 | **Participants** | Tanguy DECORDE, Edgar FLAUD, Cyrian GOMME, Oliver WEST |
 
