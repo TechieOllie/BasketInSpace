@@ -108,5 +108,5 @@ subtitle: "PGL 2026-2027 · Équipe 4"
 
 | ID test | Description de l'anomalie | Issue GitHub créée |
 | ------- | ------------------------------------------------------------ | ------------------ |
-| T-04 | `npm run db:studio` s'arrête avec le message « Prisma Studio is not supported for the "file:./prisma/dev.db" protocol » : Prisma Studio 7 n'ouvre pas les bases SQLite locales. Les 8 tables sont bien créées (vérifié avec `sqlite3 prisma/dev.db ".tables"`). À corriger au sprint 2 : retirer la commande du README ou la remplacer par un autre outil. | À créer |
-| T-37 | Anomalie mineure, sans effet sur le résultat du test. Sur mobile, la flèche « mois suivant » du calendrier passe à la ligne, séparée de la flèche « mois précédent ». | À créer |
+| T-04 | `npm run db:studio` s'arrête avec le message « Prisma Studio is not supported for the "file:./prisma/dev.db" protocol » : Prisma Studio 7 n'ouvre pas les bases SQLite locales. Les 8 tables sont bien créées (vérifié avec `sqlite3 prisma/dev.db ".tables"`). À corriger au sprint 2 : retirer la commande du README ou la remplacer par un autre outil. | #38 |
+| T-37 | Anomalie mineure, sans effet sur le résultat du test. Sur mobile, la flèche « mois suivant » du calendrier passe à la ligne, séparée de la flèche « mois précédent ». | #39 |
