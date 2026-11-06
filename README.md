@@ -8,6 +8,7 @@ Les documents de chaque sprint (Product Backlog, Sprint Backlog, cahier de tests
 
 - [Installation du projet](#installation-du-projet)
 - [Base de données](#base-de-données)
+- [Déploiement (Vercel)](#déploiement-vercel)
 - [Structure du code](#structure-du-code)
 - [Installer et configurer git et gh](#installer-et-configurer-git-et-gh)
   - [Windows](#windows)
@@ -92,6 +93,17 @@ import { PrismaClient } from "./generated/prisma/client";
 const adapter = new PrismaBetterSqlite3({ url: process.env.DATABASE_URL! });
 export const prisma = new PrismaClient({ adapter });
 ```
+
+## Déploiement (Vercel)
+
+Le site est hébergé sur [Vercel](https://vercel.com), relié au dépôt GitHub :
+
+- chaque push sur `main` met à jour le site de production ;
+- chaque pull request reçoit sa propre **URL de prévisualisation**, postée en commentaire sur la PR. Pratique pour relire un changement sans le lancer en local.
+
+La configuration est dans [`vercel.json`](vercel.json). Vercel lance `npm ci` puis `npm run build` et sert le dossier `dist/`. Toutes les URL renvoient vers `index.html` : une nouvelle page (comme `/calendrier`) fonctionne donc sans réglage supplémentaire.
+
+> **Base de données :** sur Vercel, les fichiers ne sont pas conservés, et `dev.db` (SQLite) ne peut donc pas servir en production. Quand la connexion, les réservations et les scores arriveront, il faudra une base hébergée (par exemple [Turso](https://turso.tech), compatible SQLite et Prisma, ou Postgres sur [Neon](https://neon.tech)). L'API pourra alors tourner dans des fonctions Vercel (dossier `api/`), dans le même projet.
 
 ## Structure du code
 
