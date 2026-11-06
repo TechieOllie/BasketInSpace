@@ -6,6 +6,7 @@ import { useTheme } from "../shared/useTheme";
 import { NAV_LINKS } from "../shared/content";
 import type { User } from "../shared/types";
 import { BallLogo, SunIcon, MoonIcon, MenuIcon } from "../shared/Icons";
+import { withBase } from "../shared/url";
 
 export default function Navbar({
   user = null,
@@ -28,7 +29,7 @@ export default function Navbar({
           className="navbar navbar-expand-xl sb-glass sb-capsule border py-2 ps-3 ps-sm-4 pe-2"
           aria-label="Navigation principale"
         >
-          <a className="navbar-brand sb-display sb-brand d-flex align-items-center gap-2 me-2 me-sm-3" href="/">
+          <a className="navbar-brand sb-display sb-brand d-flex align-items-center gap-2 me-2 me-sm-3" href={withBase("/")}>
             <BallLogo />
             <span>BasketInSpace</span>
           </a>
@@ -62,7 +63,7 @@ export default function Navbar({
                     <a
                       className={`nav-link sb-pill ${active ? "active fw-bold" : ""}`}
                       aria-current={active ? "page" : undefined}
-                      href={link.href}
+                      href={withBase(link.href)}
                     >
                       {link.label}
                     </a>
@@ -80,9 +81,9 @@ export default function Navbar({
                   </button>
                 </>
               ) : (
-                <a className="text-nowrap" href="/connexion">Connexion / Inscription</a>
+                <a className="text-nowrap" href={withBase("/connexion")}>Connexion / Inscription</a>
               )}
-              <a className="btn btn-primary rounded-pill px-4 px-xl-3 px-xxl-4 text-nowrap sb-raised" href={reserveHref}>
+              <a className="btn btn-primary rounded-pill px-4 px-xl-3 px-xxl-4 text-nowrap sb-raised" href={withBase(reserveHref)}>
                 Réserver une séance/match
               </a>
             </div>

@@ -6,10 +6,11 @@ import './shared/base.css'
 import './bootstrap/bridge.css'
 import HomePage from './bootstrap/HomePage'
 import CalendarPage from './bootstrap/CalendarPage'
+import { currentRoute } from './shared/url'
 
 // Les liens de la Navbar sont de simples <a href> : chaque navigation
 // recharge la page, on choisit donc la page selon le chemin courant.
-const path = window.location.pathname.replace(/\/+$/, '') || '/'
+const path = currentRoute()
 const user = null
 const onLogout = () => {}
 

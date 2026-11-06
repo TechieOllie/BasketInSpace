@@ -1,6 +1,7 @@
 // US-01 : grand titre + description du sport.
 import HeroArt from "../shared/HeroArt";
 import type { User } from "../shared/types";
+import { withBase } from "../shared/url";
 
 export default function Hero({ user = null }: { user?: User | null }) {
   return (
@@ -17,7 +18,7 @@ export default function Hero({ user = null }: { user?: User | null }) {
             <div className="d-flex flex-wrap gap-3">
               <a
                 className="btn btn-primary btn-lg rounded-pill px-4 sb-raised"
-                href={user ? "/reservation" : "/connexion"}
+                href={withBase(user ? "/reservation" : "/connexion")}
               >
                 Réserver une séance
               </a>

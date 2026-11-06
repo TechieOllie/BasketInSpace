@@ -1,0 +1,65 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Une seule publication à la fois ; on ne coupe pas un déploiement en cours.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Configure Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      # Le postinstall lance `prisma generate`, qui lit DATABASE_URL.
+      - name: Install dependencies
+        run: npm ci
+        env:
+          DATABASE_URL: file:./dev.db
+
+      - name: Build
+        run: npm run build
+        env:
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}/
+
+      # GitHub Pages ne connaît que des fichiers : on duplique index.html pour
+      # que /calendrier fonctionne au rechargement, et en 404.html comme repli.
+      - name: Add SPA routes
+        run: |
+          mkdir -p dist/calendrier
+          cp dist/index.html dist/calendrier/index.html
+          cp dist/index.html dist/404.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

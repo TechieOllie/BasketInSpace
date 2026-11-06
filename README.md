@@ -8,6 +8,7 @@ Les documents de chaque sprint (Product Backlog, Sprint Backlog, cahier de tests
 
 - [Installation du projet](#installation-du-projet)
 - [Base de données](#base-de-données)
+- [Déploiement (GitHub Pages)](#déploiement-github-pages)
 - [Structure du code](#structure-du-code)
 - [Installer et configurer git et gh](#installer-et-configurer-git-et-gh)
   - [Windows](#windows)
@@ -93,6 +94,14 @@ const adapter = new PrismaBetterSqlite3({ url: process.env.DATABASE_URL! });
 export const prisma = new PrismaClient({ adapter });
 ```
 
+## Déploiement (GitHub Pages)
+
+Chaque push sur `main` lance le workflow [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml), qui construit le site et le publie sur <https://techieollie.github.io/BasketInSpace/>. On peut aussi le lancer à la main depuis l'onglet **Actions**. Dans les réglages du dépôt, **Settings → Pages → Source** doit être sur **GitHub Actions**.
+
+Le site est servi sous le sous-chemin `/BasketInSpace/`. Le workflow le transmet à Vite via `BASE_PATH` ; en local, rien ne change. Écrivez donc les liens internes avec `withBase("/calendrier")` (dans `src/shared/url.ts`), jamais `"/calendrier"` en dur. Chaque nouvelle page doit aussi être ajoutée à l'étape « Add SPA routes » du workflow, sinon elle donne une 404 au rechargement.
+
+> **Limite :** GitHub Pages n'héberge que des fichiers statiques. Il ne peut faire tourner ni serveur ni base de données. Le site fonctionne aujourd'hui parce que ses données sont écrites dans le code. La connexion, les réservations et les scores auront besoin d'une API (par exemple Express + Prisma) hébergée ailleurs (Render, Fly.io, Railway…). Pages continuera de servir la partie visible du site, qui appellera cette API.
+
 ## Structure du code
 
 ```
@@ -117,13 +126,14 @@ src/
     Icons.tsx           Icônes SVG
     content.ts          Liens, règles, tuiles, pied de page (et leurs types)
     types.ts            Types partagés (`User`)
+    url.ts              withBase() et currentRoute() : liens et routes sous le sous-chemin de déploiement
 ```
 
 L'ordre des imports dans `main.tsx` compte : Bootstrap, puis `tokens.css`, `base.css` et `bridge.css`.
 
 Le thème est porté par l'attribut `data-bs-theme` sur `<html>`, que Bootstrap lit nativement.
 
-Pour voir la navbar d'un utilisateur connecté (US-03), remplacez `user={null}` par `user={{ pseudo: "..." }}` dans `main.tsx`. Sans utilisateur, les boutons « Réserver » mènent à `/connexion` (US-04). Les liens sont de simples `<a href>` : il faudra les remplacer par ceux du routeur.
+Pour voir la navbar d'un utilisateur connecté (US-03), remplacez `user={null}` par `user={{ pseudo: "..." }}` dans `main.tsx`. Sans utilisateur, les boutons « Réserver » mènent à `/connexion` (US-04). Les liens sont de simples `<a href>` (préfixés par `withBase()`) : il faudra les remplacer par ceux du routeur.
 
 À compléter : les textes entre crochets (description, règles, contacts, réseaux sociaux) dans `src/shared/content.ts` et dans `Hero.tsx` et `Rules.tsx`.
 

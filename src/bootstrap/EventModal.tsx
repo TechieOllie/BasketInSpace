@@ -5,6 +5,7 @@ import type { ClubEvent } from "../shared/events";
 import { EVENT_TYPES, getClub } from "../shared/events";
 import type { User } from "../shared/types";
 import { formatLongDate, formatTime } from "../shared/calendarUtils";
+import { withBase } from "../shared/url";
 
 export default function EventModal({
   event,
@@ -92,7 +93,7 @@ export default function EventModal({
                   Complet
                 </button>
               ) : (
-                <a href={bookingHref} className="btn btn-primary rounded-pill px-4 sb-raised">
+                <a href={withBase(bookingHref)} className="btn btn-primary rounded-pill px-4 sb-raised">
                   {event.type === "match" ? "Réserver ma place" : "Réserver cette séance"}
                 </a>
               )}

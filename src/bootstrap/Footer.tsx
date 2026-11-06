@@ -1,5 +1,6 @@
 // US-06 : contacts, mentions légales, réseaux sociaux, copyright.
 import { FOOTER_COLUMNS } from "../shared/content";
+import { withBase } from "../shared/url";
 
 // L'e-mail n'a pas d'espace : on autorise la coupure juste après l'@
 // pour qu'il ne déborde pas sur la colonne voisine.
@@ -30,7 +31,7 @@ export default function Footer() {
               <ul className="list-unstyled m-0 text-body-secondary sb-foot-links">
                 {col.items.map((item) => (
                   <li key={item.label}>
-                    {item.href ? <a href={item.href}>{item.label}</a> : breakAfterAt(item.label)}
+                    {item.href ? <a href={withBase(item.href)}>{item.label}</a> : breakAfterAt(item.label)}
                   </li>
                 ))}
               </ul>
@@ -39,7 +40,7 @@ export default function Footer() {
         </div>
         <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 border-top mt-4 pt-2 small text-body-secondary sb-foot-links">
           <span>© {new Date().getFullYear()} BasketInSpace. Tous droits réservés.</span>
-          <a className="me-n-pill" href="/mentions-legales">Mentions légales</a>
+          <a className="me-n-pill" href={withBase("/mentions-legales")}>Mentions légales</a>
         </div>
       </div>
     </footer>
