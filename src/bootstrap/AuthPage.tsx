@@ -9,11 +9,13 @@ type AuthMode = "login" | "register";
 
 export default function AuthPage({ initialMode }: { initialMode: AuthMode }) {
   const [notice, setNotice] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const user: User | null = null;
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const formData = new FormData(form);
     if (
       initialMode === "register" &&
       formData.get("password") !== formData.get("passwordConfirmation")
@@ -21,11 +23,57 @@ export default function AuthPage({ initialMode }: { initialMode: AuthMode }) {
       setNotice("Les deux mots de passe doivent être identiques.");
       return;
     }
-    setNotice(
-      initialMode === "login"
-        ? "La connexion sera disponible lorsque l'authentification sera branchée."
-        : "Le formulaire est valide, mais aucun compte n'a été enregistré."
-    );
+
+    const isLogin = initialMode === "login";
+    const payload = isLogin
+      ? {
+          email: formData.get("email"),
+          motDePasse: formData.get("password"),
+        }
+      : {
+          nom: formData.get("nom"),
+          prenom: formData.get("prenom"),
+          pseudo: formData.get("pseudo"),
+          email: formData.get("email"),
+          telephone: formData.get("telephone"),
+          anneeNaissance: Number(formData.get("anneeNaissance")),
+          planete: formData.get("planete"),
+          district: formData.get("district"),
+          motDePasse: formData.get("password"),
+        };
+
+    setIsSubmitting(true);
+    setNotice("");
+
+    try {
+      const response = await fetch(isLogin ? "/api/auth/login" : "/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json() as {
+        error?: string;
+        user?: User;
+      };
+
+      if (!response.ok) {
+        setNotice(result.error ?? "Impossible de créer le compte.");
+        return;
+      }
+
+      if (isLogin) {
+        localStorage.setItem("basketinspace.user", JSON.stringify(result.user));
+        window.location.href = "/";
+      } else {
+        setNotice("Compte créé avec succès. Bienvenue dans l'équipe !");
+        form.reset();
+      }
+    } catch (error: unknown) {
+      console.error("Erreur de connexion à l'API :", error);
+      setNotice("Le serveur est indisponible. Vérifiez que l'API est démarrée.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -105,13 +153,13 @@ export default function AuthPage({ initialMode }: { initialMode: AuthMode }) {
             )}
 
             {notice ? <p className="sb-auth-notice" role="status">{notice}</p> : null}
-            <button className="btn btn-primary sb-raised sb-auth-submit" type="submit">
-              {initialMode === "login" ? "Se connecter" : "Créer mon compte"}
+            <button className="btn btn-primary sb-raised sb-auth-submit" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Connexion en cours..." : initialMode === "login" ? "Se connecter" : "Créer mon compte"}
             </button>
           </form>
 
           <p className="sb-auth-footnote mb-0">
-            Maquette front-end : vos informations ne sont ni envoyées ni enregistrées.
+            Vos informations sont enregistrées de façon sécurisée dans votre profil.
           </p>
         </section>
       </main>

@@ -11,8 +11,12 @@ import AuthPage from './bootstrap/AuthPage'
 // Les liens de la Navbar sont de simples <a href> : chaque navigation
 // recharge la page, on choisit donc la page selon le chemin courant.
 const path = window.location.pathname.replace(/\/+$/, '') || '/'
-const user = null
-const onLogout = () => {}
+const storedUser = localStorage.getItem('basketinspace.user')
+const user = storedUser ? JSON.parse(storedUser) : null
+const onLogout = () => {
+  localStorage.removeItem('basketinspace.user')
+  window.location.href = '/connexion'
+}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

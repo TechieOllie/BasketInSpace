@@ -1,4 +1,4 @@
-import { randomBytes, scryptSync } from "node:crypto";
+import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
 import express from "express";
 import { prisma } from "./prisma.js";
 import { Prisma } from "../src/generated/prisma/client.js";
@@ -53,6 +53,42 @@ app.post("/api/auth/register", async (request, response) => {
 
     console.error("Erreur lors de la création du compte :", error);
     response.status(500).json({ error: "Impossible de créer le compte." });
+  }
+});
+
+app.post("/api/auth/login", async (request, response) => {
+  const identifier = readText(request.body?.email);
+  const password = readText(request.body?.motDePasse);
+
+  if (!identifier || !password) {
+    response.status(400).json({ error: "L'e-mail et le mot de passe sont obligatoires." });
+    return;
+  }
+
+  try {
+    const user = await prisma.user.findFirst({
+      where: {
+        OR: [{ email: identifier.toLowerCase() }, { pseudo: identifier }],
+      },
+    });
+
+    if (!user || !verifyPassword(password, user.motDePasse)) {
+      response.status(401).json({ error: "E-mail, pseudo ou mot de passe incorrect." });
+      return;
+    }
+
+    response.json({
+      user: {
+        id: user.id,
+        pseudo: user.pseudo,
+        prenom: user.prenom,
+        nom: user.nom,
+        email: user.email,
+      },
+    });
+  } catch (error: unknown) {
+    console.error("Erreur lors de la connexion :", error);
+    response.status(500).json({ error: "Impossible de se connecter." });
   }
 });
 
@@ -151,6 +187,18 @@ function hashPassword(password: string): string {
   const salt = randomBytes(16).toString("hex");
   const hash = scryptSync(password, salt, 64).toString("hex");
   return `scrypt$${salt}$${hash}`;
+}
+
+function verifyPassword(password: string, storedPassword: string): boolean {
+  const [algorithm, salt, storedHash] = storedPassword.split("$");
+
+  if (algorithm !== "scrypt" || !salt || !storedHash) {
+    return false;
+  }
+
+  const actualHash = scryptSync(password, salt, 64);
+  const expectedHash = Buffer.from(storedHash, "hex");
+  return actualHash.length === expectedHash.length && timingSafeEqual(actualHash, expectedHash);
 }
 
 function isUniqueConstraintError(error: unknown): error is Prisma.PrismaClientKnownRequestError {
