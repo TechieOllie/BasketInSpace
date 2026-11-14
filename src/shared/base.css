@@ -27,13 +27,29 @@ body { margin: 0; }
 .sb-accent-text { color: var(--sb-accent-text); }
 #regles { scroll-margin-top: 6rem; }
 
-/* ---------- Ciel étoilé : deux couches qui dérivent et suivent le défilement ---------- */
-.sb-sky { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+/* ---------- Ciel étoilé : deux couches qui dérivent lentement ----------
+   Optimisé : le ciel est fixe et fait la taille de l'écran (pas de toute la page),
+   il ne dépend plus du défilement et n'est animé qu'avec transform et opacity,
+   que le navigateur gère sur la carte graphique sans repeindre. */
+.sb-sky {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;            /* ce qui change dans le ciel ne touche pas au reste de la page */
+}
 .sb-sky__far,
-.sb-sky__near { position: absolute; top: 0; bottom: 0; left: 0; right: -900px; }
+.sb-sky__near {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  will-change: transform;     /* chaque couche a sa propre couche GPU */
+}
 .sb-sky__far {
+  right: -620px;              /* une tuile de plus que l'écran : juste ce qu'il faut pour la dérive */
   background-size: 620px 560px;
-  background-position: 0 calc(var(--sb-scroll, 0) * 0.5px);   /* loin : suit lentement */
   animation: sb-drift-far 240s linear infinite;
   background-image:
     radial-gradient(circle at 6% 20%, var(--sb-star) 0 1.2px, transparent 1.7px),
@@ -50,8 +66,8 @@ body { margin: 0; }
     radial-gradient(circle at 96% 24%, var(--sb-star) 0 1.4px, transparent 1.9px);
 }
 .sb-sky__near {
+  right: -880px;
   background-size: 880px 760px;
-  background-position: 0 calc(var(--sb-scroll, 0) * 0.2px);   /* près : suit presque la page */
   animation: sb-drift-near 150s linear infinite, sb-twinkle 4s ease-in-out infinite alternate;
   background-image:
     radial-gradient(circle at 12% 30%, var(--sb-star) 0 1.8px, transparent 2.4px),
@@ -66,9 +82,17 @@ body { margin: 0; }
 .sb-glass {
   background: var(--sb-surface);
   background: color-mix(in srgb, var(--sb-surface) 80%, transparent);
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(8px);   /* 8px au lieu de 14px : presque pareil, bien moins coûteux */
+  backdrop-filter: blur(8px);
   box-shadow: 0 20px 30px -22px var(--sb-shadow);
+}
+/* Sur mobile, pas de flou : fond plein, beaucoup plus léger pour le téléphone */
+@media (max-width: 767.98px) {
+  .sb-glass {
+    background: var(--sb-surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
 }
 
 /* Bouton en relief, qui s'enfonce au clic */
@@ -163,5 +187,5 @@ body { margin: 0; }
 @media (prefers-reduced-motion: reduce) {
   .sb-raised, .sb-lift { transition: none; }
   .sb-ship-orbit, .sb-flame, .sb-comet, .sb-tw { animation: none; }
-  .sb-sky__far, .sb-sky__near { animation: none; background-position: 0 0; }
+  .sb-sky__far, .sb-sky__near { animation: none; will-change: auto; }
 }
