@@ -25,6 +25,7 @@ body { margin: 0; }
 
 .sb-display { font-family: var(--sb-font-display); }
 .sb-accent-text { color: var(--sb-accent-text); }
+#regles { scroll-margin-top: 6rem; }
 
 /* ---------- Ciel étoilé : deux couches qui dérivent lentement ----------
    Optimisé : le ciel est fixe et fait la taille de l'écran (pas de toute la page),
