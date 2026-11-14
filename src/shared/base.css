@@ -25,6 +25,7 @@ body { margin: 0; }
 
 .sb-display { font-family: var(--sb-font-display); }
 .sb-accent-text { color: var(--sb-accent-text); }
+#regles { scroll-margin-top: 6rem; }
 
 /* ---------- Ciel étoilé : deux couches qui dérivent et suivent le défilement ---------- */
 .sb-sky { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
