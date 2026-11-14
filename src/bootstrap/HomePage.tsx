@@ -22,7 +22,7 @@ export default function HomePage({
   return (
     <div className="sb-page">
       <StarSky />
-      <Navbar user={user} onLogout={onLogout} currentPath="/" />
+      <Navbar user={user} onLogout={onLogout} />
       <main>
         <Hero user={user} />
         <Rules />

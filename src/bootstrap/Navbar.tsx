@@ -2,6 +2,7 @@
 // react-bootstrap ni le JS de Bootstrap : le repli est piloté par l'état React).
 // Couvre US-02, US-03, US-04, US-05.
 import { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
 import { useTheme } from "../shared/useTheme";
 import { NAV_LINKS } from "../shared/content";
 import type { User } from "../shared/types";
@@ -10,11 +11,9 @@ import { BallLogo, SunIcon, MoonIcon, MenuIcon } from "../shared/Icons";
 export default function Navbar({
   user = null,
   onLogout,
-  currentPath = "/",
 }: {
   user?: User | null;
   onLogout?: () => void;
-  currentPath?: string;
 }) {
   const [open, setOpen] = useState(false);
   const { theme, toggle } = useTheme();
@@ -28,10 +27,10 @@ export default function Navbar({
           className="navbar navbar-expand-xl sb-glass sb-capsule border py-2 ps-3 ps-sm-4 pe-2"
           aria-label="Navigation principale"
         >
-          <a className="navbar-brand sb-display sb-brand d-flex align-items-center gap-2 me-2 me-sm-3" href="/">
+          <Link className="navbar-brand sb-display sb-brand d-flex align-items-center gap-2 me-2 me-sm-3" to="/">
             <BallLogo />
             <span>BasketInSpace</span>
-          </a>
+          </Link>
 
           {/* Le bouton de mode reste visible sur mobile et passe en dernier sur grand écran */}
           <button
@@ -56,16 +55,15 @@ export default function Navbar({
           <div id="sb-menu" className={`collapse navbar-collapse order-xl-2 ${open ? "show" : ""}`}>
             <ul className="navbar-nav me-auto py-2 py-xl-0">
               {NAV_LINKS.map((link) => {
-                const active = link.href === currentPath;
                 return (
                   <li className="nav-item" key={link.href}>
-                    <a
-                      className={`nav-link sb-pill ${active ? "active fw-bold" : ""}`}
-                      aria-current={active ? "page" : undefined}
-                      href={link.href}
+                    <NavLink
+                      className={({ isActive }) => `nav-link sb-pill ${isActive ? "active fw-bold" : ""}`}
+                      end={link.href === "/"}
+                      to={link.href}
                     >
                       {link.label}
-                    </a>
+                    </NavLink>
                   </li>
                 );
               })}
@@ -80,11 +78,11 @@ export default function Navbar({
                   </button>
                 </>
               ) : (
-                <a className="text-nowrap" href="/connexion">Connexion / Inscription</a>
+                <Link className="text-nowrap" to="/connexion">Connexion / Inscription</Link>
               )}
-              <a className="btn btn-primary rounded-pill px-4 px-xl-3 px-xxl-4 text-nowrap sb-raised" href={reserveHref}>
+              <Link className="btn btn-primary rounded-pill px-4 px-xl-3 px-xxl-4 text-nowrap sb-raised" to={reserveHref}>
                 Réserver une séance/match
-              </a>
+              </Link>
             </div>
           </div>
         </nav>

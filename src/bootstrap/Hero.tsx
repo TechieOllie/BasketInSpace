@@ -1,6 +1,7 @@
 // US-01 : grand titre + description du sport.
 import HeroArt from "../shared/HeroArt";
 import type { User } from "../shared/types";
+import { Link } from "react-router-dom";
 
 export default function Hero({ user = null }: { user?: User | null }) {
   return (
@@ -15,15 +16,15 @@ export default function Hero({ user = null }: { user?: User | null }) {
               Le basket se joue maintenant parmi les étoiles, le BasketInSpace est le seul sport où un simple rebond peut vous envoyer sur Mars. Affrontez vos adversaires en apesanteur, évitez les météorites et devenez le meilleur basketteur de la galaxie.
             </p>
             <div className="d-flex flex-wrap gap-3">
-              <a
+              <Link
                 className="btn btn-primary btn-lg rounded-pill px-4 sb-raised"
-                href={user ? "/reservation" : "/connexion"}
+                to={user ? "/reservation" : "/connexion"}
               >
                 Réserver une séance
-              </a>
-              <a className="btn btn-outline-secondary btn-lg rounded-pill px-4" href="#regles">
+              </Link>
+              <Link className="btn btn-outline-secondary btn-lg rounded-pill px-4" to="/#regles">
                 Découvrir les règles
-              </a>
+              </Link>
             </div>
           </div>
           <div className="col-lg-6 text-center">
