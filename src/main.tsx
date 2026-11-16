@@ -8,6 +8,7 @@ import "./bootstrap/bridge.css";
 import HomePage from "./bootstrap/HomePage";
 import CalendarPage from "./bootstrap/CalendarPage";
 import AuthPage from "./bootstrap/AuthPage";
+import ShopPage from "./bootstrap/ShopPage";
 import ScrollManager from "./ScrollManager";
 
 const user = null
@@ -20,6 +21,7 @@ createRoot(document.getElementById("root")!).render(
       <Routes>
         <Route path="/" element={<HomePage user={user} onLogout={onLogout} />} />
         <Route path="/calendrier" element={<CalendarPage user={user} onLogout={onLogout} />} />
+        <Route path="/boutique" element={<ShopPage user={user} onLogout={onLogout} />} />
         <Route path="/connexion" element={<AuthPage initialMode="login" />} />
         <Route path="/inscription" element={<AuthPage initialMode="register" />} />
         <Route path="*" element={<HomePage user={user} onLogout={onLogout} />} />
