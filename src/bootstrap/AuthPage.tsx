@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import { Link, NavLink } from "react-router-dom";
 import StarSky from "../shared/StarSky";
 import type { User } from "../shared/types";
 import Footer from "./Footer";
@@ -31,10 +32,10 @@ export default function AuthPage({ initialMode }: { initialMode: AuthMode }) {
   return (
     <div className="sb-page">
       <StarSky />
-      <Navbar user={user} currentPath="/connexion" />
+      <Navbar user={user} />
       <main className="container sb-auth-main py-5">
         <section className="sb-auth-panel sb-glass border mx-auto" aria-labelledby="auth-title">
-          <a className="sb-auth-back" href="/">← Retour à l'accueil</a>
+          <Link className="sb-auth-back" to="/">← Retour à l'accueil</Link>
           <p className="sb-auth-kicker mb-2">BASKETINSPACE · ESPACE MEMBRE</p>
           <h1 id="auth-title" className="sb-display sb-auth-title mb-2">
             {initialMode === "login" ? "Bon retour." : "Rejoignez l'équipe."}
@@ -46,12 +47,12 @@ export default function AuthPage({ initialMode }: { initialMode: AuthMode }) {
           </p>
 
           <div className="sb-auth-tabs" role="group" aria-label="Choisir un formulaire">
-            <a className={initialMode === "login" ? "active" : ""} href="/connexion" aria-current={initialMode === "login" ? "page" : undefined}>
+            <NavLink className={({ isActive }) => isActive ? "active" : ""} to="/connexion" end>
               Connexion
-            </a>
-            <a className={initialMode === "register" ? "active" : ""} href="/inscription" aria-current={initialMode === "register" ? "page" : undefined}>
+            </NavLink>
+            <NavLink className={({ isActive }) => isActive ? "active" : ""} to="/inscription" end>
               Inscription
-            </a>
+            </NavLink>
           </div>
 
           <form className="sb-auth-form" onSubmit={handleSubmit}>
@@ -100,7 +101,7 @@ export default function AuthPage({ initialMode }: { initialMode: AuthMode }) {
               <Field label="Confirmer le mot de passe" name="passwordConfirmation" type="password" autoComplete="new-password" minLength={8} required />
             ) : (
               <div className="text-end">
-                <a className="sb-auth-small-link" href="/connexion">Mot de passe oublié ?</a>
+                <Link className="sb-auth-small-link" to="/connexion">Mot de passe oublié ?</Link>
               </div>
             )}
 

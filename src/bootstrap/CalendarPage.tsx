@@ -79,7 +79,7 @@ export default function CalendarPage({
   return (
     <div className="sb-page">
       <StarSky />
-      <Navbar user={user} onLogout={onLogout} currentPath="/calendrier" />
+      <Navbar user={user} onLogout={onLogout} />
 
       <main className="container py-5">
         <header className="mb-4 mb-lg-5">
