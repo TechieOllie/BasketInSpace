@@ -11,8 +11,13 @@ import AuthPage from "./bootstrap/AuthPage";
 import ShopPage from "./bootstrap/ShopPage";
 import ScrollManager from "./ScrollManager";
 
-const user = null
-const onLogout = () => {}
+// L'utilisateur connecté est gardé dans le localStorage par AuthPage.
+const storedUser = localStorage.getItem('basketinspace.user')
+const user = storedUser ? JSON.parse(storedUser) : null
+const onLogout = () => {
+  localStorage.removeItem('basketinspace.user')
+  window.location.href = '/connexion'
+}
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
