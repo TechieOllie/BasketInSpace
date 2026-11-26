@@ -2,12 +2,22 @@
 
 Site de la fédération du BasketInSpace, un basket fictif joué en apesanteur, sur le modèle de la FFBB : clubs et équipes, calendrier des entraînements et des matchs, réservations, scores et boutique. Projet PGL 2026-2027, équipe 4 (Tanguy DECORDE, Edgar FLAUD, Cyrian GOMME, Oliver WEST).
 
-Projet React + TypeScript + Vite, avec Bootstrap 5.3. Au sprint 1, deux pages sont réalisées : l'**accueil** (`/`) et le **calendrier** (`/calendrier`, avec des données fictives d'octobre et novembre 2026). Les autres liens du menu mènent pour l'instant à la page d'accueil.
+Projet React + TypeScript + Vite, avec Bootstrap 5.3 et React Router. Une petite API Express + Prisma (dossier `server/`) gère les comptes. Pages réalisées :
+
+| Page                    | URL                          | État                                                           |
+| ----------------------- | ---------------------------- | -------------------------------------------------------------- |
+| Accueil                 | `/`                          | Terminée                                                       |
+| Calendrier              | `/calendrier`                | Données fictives d'octobre et novembre 2026                    |
+| Boutique                | `/boutique`                  | Catégories et recherche en place, aucun article pour l'instant |
+| Connexion / inscription | `/connexion`, `/inscription` | Reliées à la base via l'API                                    |
+
+Les autres liens du menu (`/clubs`, `/scores`) mènent pour l'instant à la page d'accueil.
 
 Les documents de chaque sprint (Product Backlog, Sprint Backlog, cahier de tests, compte rendu de rétrospective) sont dans [`docs/`](docs/).
 
 - [Installation du projet](#installation-du-projet)
 - [Base de données](#base-de-données)
+- [API](#api)
 - [Déploiement (Vercel)](#déploiement-vercel)
 - [Structure du code](#structure-du-code)
 - [Installer et configurer git et gh](#installer-et-configurer-git-et-gh)
@@ -42,23 +52,31 @@ npm ci
 cp .env.example .env
 npm run db:migrate
 
-# 5. Lancer le serveur de dev, puis ouvrir l'URL affichée (en général http://localhost:5173)
+# 5. Lancer l'API (dans un premier terminal) : http://localhost:3001
+npm run dev:api
+
+# 6. Lancer le site (dans un second terminal), puis ouvrir l'URL affichée (en général http://localhost:5173)
 npm run dev
 ```
+
+Le site et l'API tournent dans deux terminaux séparés. Vite redirige les requêtes `/api/...` vers l'API (voir `vite.config.ts`) : sans `npm run dev:api`, les pages s'affichent mais la connexion et l'inscription échouent.
 
 Autres scripts :
 
 | Commande             | Ce qu'elle fait                                                                 |
 | -------------------- | ------------------------------------------------------------------------------- |
-| `npm run dev`        | Serveur de dev avec rechargement automatique                                    |
+| `npm run dev`        | Serveur de dev du site avec rechargement automatique                            |
+| `npm run dev:api`    | Lance l'API sur le port 3001, relancée à chaque modification de `server/`       |
 | `npm run build`      | Vérifie les types et construit le site de production dans `dist/`               |
+| `npm run build:api`  | Compile l'API dans `dist-server/`                                               |
+| `npm run start:api`  | Lance l'API compilée (après `build:api`)                                        |
 | `npm run preview`    | Sert le dossier `dist/` construit, en local                                     |
 | `npm run lint`       | Lance ESLint                                                                    |
 | `npm run db:migrate` | Applique les migrations à la base locale (et en crée une si le schéma a changé) |
 | `npm run db:reset`   | Vide la base locale et rejoue toutes les migrations                             |
 | `npm run db:studio`  | Ouvre Prisma Studio pour voir et modifier les données                           |
 
-La page d'accueil s'affiche dans le navigateur ; le calendrier est sur `/calendrier`. Les polices (Unbounded, Manrope) sont chargées depuis Google Fonts : il faut une connexion internet.
+Les polices (Unbounded, Manrope) sont chargées depuis Google Fonts : il faut une connexion internet.
 
 > Utilisez `npm ci` après un clone ou un pull. N'utilisez `npm install <paquet>` que pour ajouter une dépendance, et commitez alors `package.json` **et** `package-lock.json` ensemble.
 
@@ -83,16 +101,27 @@ Modifier le schéma :
 
 Après un pull qui apporte de nouvelles migrations, relancez `npm run db:migrate`.
 
-Le client Prisma ne tourne que côté serveur (Node), jamais dans le navigateur :
+Le client Prisma ne tourne que côté serveur (Node), jamais dans le navigateur. Il est créé une seule fois dans `server/prisma.ts` ; importez-le depuis là :
 
 ```ts
-import "dotenv/config";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
-import { PrismaClient } from "./generated/prisma/client";
+import { prisma } from "./prisma.js";
 
-const adapter = new PrismaBetterSqlite3({ url: process.env.DATABASE_URL! });
-export const prisma = new PrismaClient({ adapter });
+const users = await prisma.user.findMany();
 ```
+
+## API
+
+L'API est un serveur [Express 5](https://expressjs.com) dans `server/index.ts`. Elle lit `DATABASE_URL` dans `.env` et écoute sur le port 3001 (modifiable avec la variable `PORT`).
+
+| Route                     | Ce qu'elle fait                                                                                         |
+| ------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `GET /api/health`         | Répond `{ "status": "ok" }` : sert à vérifier que l'API tourne                                          |
+| `POST /api/auth/register` | Crée un compte. Le mot de passe est haché (scrypt). Répond 409 si le pseudo ou l'e-mail est déjà pris   |
+| `POST /api/auth/login`    | Vérifie l'e-mail (ou le pseudo) et le mot de passe, puis renvoie l'utilisateur                          |
+
+Après une connexion réussie, le site garde l'utilisateur dans le `localStorage` (clé `basketinspace.user`) ; la déconnexion l'efface. Il n'y a pas encore de session ni de jeton côté serveur : l'API ne sait pas qui fait une requête.
+
+Pour ajouter une route, ajoutez-la dans `server/index.ts` avec un chemin qui commence par `/api/`, pour que le proxy de Vite la transmette.
 
 ## Déploiement (Vercel)
 
@@ -103,7 +132,7 @@ Le site est hébergé sur [Vercel](https://vercel.com), relié au dépôt GitHub
 
 La configuration est dans [`vercel.json`](vercel.json). Vercel lance `npm ci` puis `npm run build` et sert le dossier `dist/`. Toutes les URL renvoient vers `index.html` : une nouvelle page (comme `/calendrier`) fonctionne donc sans réglage supplémentaire.
 
-> **Base de données :** sur Vercel, les fichiers ne sont pas conservés, et `dev.db` (SQLite) ne peut donc pas servir en production. Quand la connexion, les réservations et les scores arriveront, il faudra une base hébergée (par exemple [Turso](https://turso.tech), compatible SQLite et Prisma, ou Postgres sur [Neon](https://neon.tech)). L'API pourra alors tourner dans des fonctions Vercel (dossier `api/`), dans le même projet.
+> **L'API n'est pas déployée.** Vercel ne sert que le site statique (`dist/`) : sur le site en ligne et les prévisualisations, la connexion et l'inscription échouent. Pour les tester, lancez le projet en local. De plus, sur Vercel les fichiers ne sont pas conservés, et `dev.db` (SQLite) ne peut donc pas servir en production. Pour mettre l'API en ligne, il faudra une base hébergée (par exemple [Turso](https://turso.tech), compatible SQLite et Prisma, ou Postgres sur [Neon](https://neon.tech)) et faire tourner les routes de `server/` dans des fonctions Vercel (dossier `api/`), dans le même projet.
 
 ## Structure du code
 
@@ -113,12 +142,20 @@ prisma.config.ts        Configuration de Prisma (schéma, migrations, URL de la 
 prisma/
   schema.prisma         Modèles de la base de données
   migrations/           Migrations SQL versionnées
+server/                 L'API (Node, jamais envoyée au navigateur)
+  index.ts              Serveur Express et routes /api
+  prisma.ts             Client Prisma partagé
+tsconfig.server.json    Compilation de l'API dans dist-server/
 src/
   generated/prisma/     Client Prisma généré (non commité)
-  main.tsx              Importe les CSS (dans cet ordre) et affiche HomePage
-  bootstrap/            La page d'accueil, avec les classes Bootstrap 5.3
-    HomePage.tsx        Assemble Navbar, Hero, Rules, Tiles, Footer
+  main.tsx              Importe les CSS (dans cet ordre), lit l'utilisateur connecté et déclare les routes
+  ScrollManager.tsx     Remonte en haut de page (ou jusqu'à l'ancre #...) quand on change de page
+  bootstrap/            Les pages, avec les classes Bootstrap 5.3
+    HomePage.tsx        Accueil : assemble Navbar, Hero, Rules, Tiles, Footer
     Navbar.tsx  Hero.tsx  Rules.tsx  Tiles.tsx  Footer.tsx
+    CalendarPage.tsx    Calendrier : MonthGrid, WeekGrid, EventList, EventChip, EventModal
+    ShopPage.tsx        Boutique (la liste SHOP_ITEMS est vide pour l'instant)
+    AuthPage.tsx        Connexion et inscription, appelle /api/auth/...
     bridge.css          Relie les variables de Bootstrap aux tokens et ajoute ce que Bootstrap n'a pas
   shared/
     tokens.css          Couleurs et polices
@@ -128,6 +165,8 @@ src/
     HeroArt.tsx         Illustration du hero (ballon-planète)
     Icons.tsx           Icônes SVG
     content.ts          Liens, règles, tuiles, pied de page (et leurs types)
+    events.ts           Événements fictifs du calendrier
+    calendarUtils.ts    Calculs de dates du calendrier
     types.ts            Types partagés (`User`)
 ```
 
@@ -135,7 +174,9 @@ L'ordre des imports dans `main.tsx` compte : Bootstrap, puis `tokens.css`, `base
 
 Le thème est porté par l'attribut `data-bs-theme` sur `<html>`, que Bootstrap lit nativement.
 
-Pour voir la navbar d'un utilisateur connecté (US-03), remplacez `user={null}` par `user={{ pseudo: "..." }}` dans `main.tsx`. Sans utilisateur, les boutons « Réserver » mènent à `/connexion` (US-04). Les liens sont de simples `<a href>` : il faudra les remplacer par ceux du routeur.
+Les pages sont déclarées dans `main.tsx` avec React Router. Pour ajouter une page, ajoutez une `<Route>` et utilisez `<Link to="...">` (pas `<a href>`) pour y mener : la navigation se fait alors sans recharger la page. Toute URL inconnue affiche l'accueil.
+
+Pour voir la navbar d'un utilisateur connecté (US-03), créez un compte sur `/inscription` puis connectez-vous. Sans utilisateur, les boutons « Réserver » mènent à `/connexion` (US-04).
 
 À compléter : les textes entre crochets (description, règles, contacts, réseaux sociaux) dans `src/shared/content.ts` et dans `Hero.tsx` et `Rules.tsx`.
 

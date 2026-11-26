@@ -11,9 +11,7 @@ import AuthPage from "./bootstrap/AuthPage";
 import ShopPage from "./bootstrap/ShopPage";
 import ScrollManager from "./ScrollManager";
 
-// Les liens de la Navbar sont de simples <a href> : chaque navigation
-// recharge la page, on choisit donc la page selon le chemin courant.
-const path = window.location.pathname.replace(/\/+$/, '') || '/'
+// L'utilisateur connecté est gardé dans le localStorage par AuthPage.
 const storedUser = localStorage.getItem('basketinspace.user')
 const user = storedUser ? JSON.parse(storedUser) : null
 const onLogout = () => {
